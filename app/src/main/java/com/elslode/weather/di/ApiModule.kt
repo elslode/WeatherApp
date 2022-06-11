@@ -21,7 +21,6 @@ interface ApiModule {
             Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(ApiWeather.BASE_URL)
-                // TODO: посмотреть повнимательнее, что это за адаптер
                 .build()
                 .create(ApiWeather::class.java)
     }

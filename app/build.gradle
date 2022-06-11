@@ -45,7 +45,7 @@ ext {
     serializacionCoreVersion = "1.3.2"
     dagger2 = "2.41"
     vm = "2.4.1"
-    cicerone = "7.1"
+    cicerone = "5.1.1"
 }
 
 dependencies {
@@ -84,5 +84,5 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$vm"
 
     //Cicerone
-    implementation "com.github.terrakok:cicerone:$cicerone"
+    implementation "ru.terrakok.cicerone:cicerone:$cicerone"
 }
