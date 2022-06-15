@@ -1,6 +1,7 @@
 package com.elslode.weather.data.network
 
 import com.elslode.weather.data.modelWeather.ResponseDataDto
+import org.intellij.lang.annotations.Language
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,7 +13,8 @@ interface ApiWeather {
         @Query(Q_KEY) q: String,
         @Query(DAYS_KEY) num_of_days: Int = 7,
         @Query(FORMAT_KEY) format: String = JSON,
-        @Query(INTERVAL_TIME) tp: Int = 24
+        @Query(INTERVAL_TIME) tp: Int = 24,
+        @Query(LANG_KEY) lang: String = LANGUAGE
     ): ResponseDataDto
 
     companion object {
@@ -24,5 +26,7 @@ interface ApiWeather {
         private const val APIKEY = "3119850ca0b641fe80f212423221206"
         private const val Q_KEY = "q"
         private const val JSON = "json"
+        private const val LANGUAGE = "ru"
+        private const val LANG_KEY = "lang"
     }
 }

@@ -8,6 +8,7 @@ data class Hourly(
     val windspeedKmph: String? = null,
     val weatherIconUrl: List<WeatherIconUrl>? = null,
     val weatherDesc: List<WeatherDesc>? = null,
+    val weather_ru: List<WeatherDesc>? = null,
     val feelsLikeC: String? = null,
     val feelsLikeF: String? = null
 )

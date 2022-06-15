@@ -47,6 +47,7 @@ ext {
     vm = "2.4.1"
     cicerone = "5.1.1"
     location_air = "2.5.2"
+    lifecycleCoroutines="2.4.1"
 }
 
 dependencies {
@@ -90,4 +91,11 @@ dependencies {
 
     //location
     implementation "com.github.mumayank:AirLocation:$location_air"
+
+    //coroutines
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleCoroutines"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleCoroutines"
+
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

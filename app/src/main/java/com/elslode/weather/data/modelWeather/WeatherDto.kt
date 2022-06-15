@@ -1,6 +1,7 @@
 package com.elslode.weather.data.modelWeather
 
 data class WeatherDto(
+    val id: Int? = null,
     val date: String? = null,
     val astronomy: List<AstronomyDto>? = null,
     val maxtempC: String? = null,

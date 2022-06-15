@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="day_of_week">30sp</dimen>
+    <dimen name="temperature">30sp</dimen>
+    <dimen name="internet_text">20sp</dimen>
+    <dimen name="state_weather">16sp</dimen>
+</resources>

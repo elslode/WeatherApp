@@ -1,6 +1,7 @@
 package com.elslode.weather.domain.entityModel
 
-data class Weather (
+data class WeatherEntity(
+    val id: Int? = null,
     val date: String? = null,
     val astronomy: List<Astronomy>? = null,
     val maxtempC: String? = null,
@@ -12,4 +13,4 @@ data class Weather (
     val sunHour: String? = null,
     val uvIndex: String? = null,
     val hourly: List<Hourly>? = null
-        )
+)
