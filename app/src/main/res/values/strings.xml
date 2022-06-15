@@ -3,4 +3,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="weather">Weather</string>
+
+    <string name="weather_desc">image weather</string>
+    <string name="temp">%s°</string>
+    <string name="internet_not_unav">Упс, что-то пошло не так</string>
+    <string name="settings">setting</string>
 </resources>

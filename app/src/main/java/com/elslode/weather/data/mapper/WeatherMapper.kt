@@ -31,7 +31,7 @@ class WeatherMapper @Inject constructor() {
         )
 
     private fun mapWeatherDtoToWeatherEntity(weatherDto: WeatherDto) =
-        Weather(
+        WeatherEntity(
             date = weatherDto.date,
             maxtempC = weatherDto.maxtempC,
             maxtempF = weatherDto.maxtempF,
@@ -73,7 +73,10 @@ class WeatherMapper @Inject constructor() {
             windspeedKmph = hourlyDto.windspeedKmph,
             windspeedMiles = hourlyDto.windspeedMiles,
             feelsLikeC = hourlyDto.feelsLikeC,
-            feelsLikeF = hourlyDto.feelsLikeF
+            feelsLikeF = hourlyDto.feelsLikeF,
+            weather_ru = hourlyDto.weather_ru?.map {
+                mapWeatherDescDtoToWeatherEntity(it)
+            }
         )
 
     private fun mapCurrentConditionDtoToCurrentConditionEntity(currentConditionDto: CurrentConditionDto) =
@@ -88,8 +91,8 @@ class WeatherMapper @Inject constructor() {
             },
             windspeedMiles = currentConditionDto.windspeedMiles,
             windspeedKmph = currentConditionDto.windspeedKmph,
-            FeelsLikeC = currentConditionDto.FeelsLikeF,
-            FeelsLikeF = currentConditionDto.FeelsLikeC
+            FeelsLikeC = currentConditionDto.FeelsLikeC,
+            FeelsLikeF = currentConditionDto.FeelsLikeF
         )
 
     private fun mapWeatherDescDtoToWeatherEntity(weatherDescDto: WeatherDescDto) =
