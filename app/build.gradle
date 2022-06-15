@@ -46,6 +46,7 @@ ext {
     dagger2 = "2.41"
     vm = "2.4.1"
     cicerone = "5.1.1"
+    location_air = "2.5.2"
 }
 
 dependencies {
@@ -63,6 +64,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$coroutinesAdapterVersion"
 
     //room
@@ -85,4 +87,7 @@ dependencies {
 
     //Cicerone
     implementation "ru.terrakok.cicerone:cicerone:$cicerone"
+
+    //location
+    implementation "com.github.mumayank:AirLocation:$location_air"
 }

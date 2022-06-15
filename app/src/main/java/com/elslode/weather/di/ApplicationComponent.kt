@@ -9,9 +9,9 @@ import javax.inject.Singleton
 
 @Component(
     modules = [
-        ApiModule::class,
         ViewModelModule::class,
-        CiceroneModule::class
+        CiceroneModule::class,
+        DataModule::class
     ]
 )
 @Singleton
