@@ -9,17 +9,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.elslode.weather.R
 import com.elslode.weather.WeatherApp
+import com.elslode.weather.data.sharedPref.PrefHelper
+import com.elslode.weather.data.sharedPref.PrefKeys
 import com.elslode.weather.databinding.FragmentMainBinding
+import com.elslode.weather.presentation.Screens
 import com.elslode.weather.presentation.ViewModelFactory
+import com.elslode.weather.presentation.mainActivity.MainActivity
+import com.elslode.weather.presentation.detailFragment.adapterHourlyRv.HourlyAdapter
 import com.elslode.weather.presentation.mainFragment.adapterRv.WeatherAdapter
-import com.elslode.weather.utils.PrefHelper
-import com.elslode.weather.utils.PrefKeys
 import com.elslode.weather.utils.State
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import ru.terrakok.cicerone.Router
+import java.io.IOException
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
@@ -32,13 +34,15 @@ class MainFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var _mainViewModel: MainViewModel
 
-    private val prefHelper by lazy {
-        PrefHelper(requireContext())
-    }
+    @Inject
+    lateinit var prefHelper: PrefHelper
 
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
     }
+
+    @Inject
+    lateinit var router: Router
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +51,12 @@ class MainFragment : Fragment() {
     }
 
     private val adapter by lazy {
-        WeatherAdapter(activity?.applicationContext as Application)
+        WeatherAdapter(activity?.applicationContext as Application, prefHelper)
     }
 
     private val latLon by lazy {
         String.format(
-            "%f,%f",
+            "%sf,%f",
             prefHelper.getFloat(PrefKeys.LATITUDE),
             prefHelper.getFloat(PrefKeys.LONGITUDE)
         )
@@ -65,48 +69,75 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
         _mainViewModel = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         binding.rvWeatherWeek.adapter = adapter
-
-        CoroutineScope(Dispatchers.IO).launch {
-            _mainViewModel.getWeather(latLon)
-        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launchWhenResumed {
+            if (prefHelper.existsString(PrefKeys.CITY_KEY)) {
+                _mainViewModel.getWeather(prefHelper.getString(PrefKeys.CITY_KEY))
+            } else {
+                _mainViewModel.getWeather(latLon)
+            }
+        }
+
+        adapter.onWeatherItemClickListener = { weather, position ->
+            with(router) {
+                navigateTo(
+                    Screens.DetailFragment(
+                        dataTime = weather.date.toString(),
+                        q = prefHelper.getString(PrefKeys.CITY_KEY) ?: latLon,
+                        position = position
+                    )
+                )
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
             _mainViewModel.weatherSharedFlow.collectLatest {
                 when (it.status) {
                     State.LOADING -> {
-                        binding.apply {
-                            progressBar.isVisible = true
-                            internetInclude.textView.isVisible = false
-                            internetInclude.imageView2.isVisible = false
-                        }
+                        binding.progressBar.visibility = View.VISIBLE
                     }
                     State.ERROR -> {
                         binding.apply {
-                            progressBar.isVisible = false
-                            internetInclude.textView.isVisible = true
-                            internetInclude.imageView2.isVisible = true
+                            progressBar.visibility = View.GONE
+                            rvWeatherWeek.isVisible = false
+                            tvChooseOtherCity.isVisible = true
+                            tvChooseOtherCity.text = requireActivity().application.getString(R.string.internet_not_unav)
                         }
                     }
                     State.SUCCESS -> {
+                        binding.progressBar.visibility = View.GONE
                         adapter.submitList(it.data?.data?.weather)
+                        it.data?.data?.current_condition?.last().apply {
+                            binding.tvWeatherStateToday.text = this?.weatherDesc?.last()?.value
+                            Picasso.get().load(this?.weatherIconUrl?.last()?.value)
+                                .into(binding.ivStateWeatherToday)
+                            binding.tvWeatherTempToday.text =
+                                when (prefHelper.getTemperature()) {
+                                    PrefKeys.c -> this?.FeelsLikeC?.plus(prefHelper.getTemperature())
+                                    PrefKeys.f -> this?.FeelsLikeF?.plus(prefHelper.getTemperature())
+                                    else -> ""
+                                }
+                        }
+                        (requireActivity() as MainActivity).supportActionBar?.title =
+                            it.data?.data?.request?.last()?.query
+                    }
+                    State.EMPTY -> {
                         binding.apply {
-                            progressBar.isVisible = false
-                            internetInclude.textView.isVisible = false
-                            internetInclude.imageView2.isVisible = false
+                            rvWeatherWeek.isVisible = false
+                            binding.tvWeatherTempToday.isVisible = false
+                            binding.tvWeatherStateToday.isVisible = false
+                            binding.cityName.isVisible = false
+                            binding.ivStateWeatherToday.isVisible = false
+                            binding.tvChooseOtherCity.isVisible = true
                         }
-                        it.data?.data?.current_condition?.apply {
-                            this.last().apply {
-                                binding.tvWeatherStateToday.text = this.weatherDesc?.last()?.value
-                                Picasso.get().load(this.weatherIconUrl?.last()?.value)
-                                    .into(binding.ivStateWeatherToday)
-                                binding.tvWeatherTempToday.text = requireActivity().getString(R.string.temp).format(this.FeelsLikeC)
-                            }
-                        }
+                        (requireActivity() as MainActivity).supportActionBar?.title =
+                            "choose other city!"
                     }
                 }
             }
@@ -120,6 +151,7 @@ class MainFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
+                router.navigateTo(Screens.SettingsFragment())
                 true
             }
             else -> super.onOptionsItemSelected(item)

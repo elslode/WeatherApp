@@ -7,7 +7,7 @@ import javax.inject.Inject
 class WeatherMapper @Inject constructor() {
 
     fun mapDataDtoToDataEntity(dataDto: ResponseDataDto) =
-        ResponseData(
+        ResponseDataEntity(
             data = dataDto.data?.let { mapWeatherResponseDtoToWeatherEntity(it) }
         )
 
@@ -76,7 +76,8 @@ class WeatherMapper @Inject constructor() {
             feelsLikeF = hourlyDto.feelsLikeF,
             weather_ru = hourlyDto.weather_ru?.map {
                 mapWeatherDescDtoToWeatherEntity(it)
-            }
+            },
+            id = hourlyDto.id
         )
 
     private fun mapCurrentConditionDtoToCurrentConditionEntity(currentConditionDto: CurrentConditionDto) =
@@ -92,7 +93,13 @@ class WeatherMapper @Inject constructor() {
             windspeedMiles = currentConditionDto.windspeedMiles,
             windspeedKmph = currentConditionDto.windspeedKmph,
             FeelsLikeC = currentConditionDto.FeelsLikeC,
-            FeelsLikeF = currentConditionDto.FeelsLikeF
+            FeelsLikeF = currentConditionDto.FeelsLikeF,
+            lang_ru = currentConditionDto.lang_ru?.map {
+                mapWeatherDescDtoToWeatherEntity(it)
+            },
+            humidity = currentConditionDto.humidity,
+            visibility = currentConditionDto.visibility,
+            visibilityMiles = currentConditionDto.visibilityMiles
         )
 
     private fun mapWeatherDescDtoToWeatherEntity(weatherDescDto: WeatherDescDto) =

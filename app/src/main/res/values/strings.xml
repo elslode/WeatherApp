@@ -1,11 +1,39 @@
 <resources>
     <string name="app_name">Weather</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="weather">Weather</string>
 
     <string name="weather_desc">image weather</string>
-    <string name="temp">%s°</string>
+    <string name="temp_c">%s C°</string>
+    <string name="temp_f">%s F°</string>
     <string name="internet_not_unav">Упс, что-то пошло не так</string>
     <string name="settings">setting</string>
+    <string name="settings_title">Settings</string>
+    <string name="enter_city">Изменить город</string>
+    <string name="search">Искать</string>
+    <string name="change_temp">Единицы:</string>
+
+    <string name="c">°C</string>
+    <string name="f">°F</string>
+    <string name="sorry_data_is_empty_choose_other_city">Sorry, data is empty, choose other city</string>
+
+    <string name="feels_like_c">Чувствуется как: %s°C</string>
+    <string name="feels_like_f">Чувствуется как: %s°F</string>
+
+    <string name="temp_of_weather_c">Температура ветра: %s°C</string>
+    <string name="temp_of_weather_">Температура ветра: %s°F</string>
+
+    <string name="wind_speed_km">Скорость ветра: %s км/ч</string>
+    <string name="wind_speed_ml">Скорость ветра: %s мл/x </string>
+
+    <string name="visibility_km">видимость: %s km</string>
+    <string name="visibility_ml">видимость: %s ml</string>
+
+    <string name="change_of_rain">вероятность дождя: %s %</string>
+    <string name="change_of_thunder">вероятность грозы: %s</string>
+    <string name="change_desc">Погода: %s</string>
+    <string name="humidity">Влажность: %s</string>
+    <string name="data_lost">Oops, data lost</string>
+    <string name="percent">%</string>
+    <string name="avrgTemp">Средняя температура ожидается:</string>
+
 </resources>
