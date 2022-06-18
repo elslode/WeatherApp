@@ -60,8 +60,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         component.inject(this)
 
-
-
         CoroutineScope(Dispatchers.IO).launch {
             airLocation.start()
             delay(2000)
