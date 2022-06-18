@@ -6,14 +6,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.elslode.weather.R
 import com.elslode.weather.WeatherApp
+import com.elslode.weather.data.sharedPref.PrefHelper
+import com.elslode.weather.data.sharedPref.PrefKeys
 import com.elslode.weather.presentation.Screens
-import com.elslode.weather.utils.PrefHelper
-import com.elslode.weather.utils.PrefKeys
 import mumayank.com.airlocationlibrary.AirLocation
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import ru.terrakok.cicerone.commands.Back
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -24,15 +25,11 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var router: Router
-
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
-
     private val navigator: Navigator
-
-    private val prefHelper by lazy {
-        PrefHelper(this.baseContext)
-    }
+    @Inject
+    lateinit var prefHelper: PrefHelper
 
     private val airLocation = AirLocation(
         this, object : AirLocation.Callback {
@@ -65,6 +62,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         component.inject(this)
         router.newRootScreen(Screens.MainFragment())
+
+        if (!prefHelper.exists(PrefKeys.TEMPERATURE)) {
+            prefHelper.put(PrefKeys.TEMPERATURE, R.id.radioButtonC)
+        }
     }
 
     override fun onResumeFragments() {
@@ -89,5 +90,10 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         airLocation.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        Back()
     }
 }

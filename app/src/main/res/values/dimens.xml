@@ -3,5 +3,10 @@
     <dimen name="day_of_week">30sp</dimen>
     <dimen name="temperature">30sp</dimen>
     <dimen name="internet_text">20sp</dimen>
-    <dimen name="state_weather">16sp</dimen>
+    <dimen name="state_weather">12sp</dimen>
+    <dimen name="state_value">24sp</dimen>
+    <dimen name="margin_1">8dp</dimen>
+    <dimen name="margin_2">24dp</dimen>
+    <dimen name="dimen_24">24sp</dimen>
+    <dimen name="dimen_16">16sp</dimen>
 </resources>

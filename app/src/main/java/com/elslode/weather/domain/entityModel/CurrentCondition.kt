@@ -8,5 +8,9 @@ data class CurrentCondition(
     val windspeedMiles: String? = null,
     val windspeedKmph: String? = null,
     val FeelsLikeC: String? = null,
-    val FeelsLikeF: String? = null
+    val FeelsLikeF: String? = null,
+    val lang_ru: List<WeatherDesc>? = null,
+    val humidity: String? = null,
+    val visibility: String? = null,
+    val visibilityMiles: String? = null
 )

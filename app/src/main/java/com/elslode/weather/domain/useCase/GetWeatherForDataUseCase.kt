@@ -9,20 +9,18 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class GetWeatherUseCase @Inject constructor(
+class GetWeatherForDataUseCase @Inject constructor(
     private val repository: RepositoryImpl
 ) {
-    operator fun invoke(lat_lon: String): Flow<StateResource<ResponseDataEntity>> = flow {
-        emit(StateResource.loading<ResponseDataEntity>(null))
+    suspend operator fun invoke(q: String?, dataTime: String?): Flow<StateResource<ResponseDataEntity>> = flow {
+        emit(StateResource.loading(null))
         try {
-            val weather = repository.getWeather(lat_lon)
-            if (weather.data?.weather.isNullOrEmpty()) {
+            val weatherDetails = repository.getWeatherForDataDetail(query = q.toString(), dataTime = dataTime.toString())
+            if (weatherDetails.data?.current_condition.isNullOrEmpty()) {
                 emit(StateResource.empty(null))
             } else {
-                emit(StateResource.success(weather))
+                emit(StateResource.success(weatherDetails))
             }
-
-
         } catch (e: HttpException) {
             emit(StateResource.error(e.localizedMessage ?: "An unexpected error occurred", null))
         } catch (e: IOException) {

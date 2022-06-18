@@ -1,6 +1,7 @@
 package com.elslode.weather.data.modelWeather
 
 data class HourlyDto(
+    val id: Int = 0,
     val time: String? = null,
     val tempC: String? = null,
     val tempF: String? = null,

@@ -1,5 +1,5 @@
 package com.elslode.weather.domain.entityModel
 
-data class ResponseData(
+data class ResponseDataEntity(
     val data: ListsWeather? = null
 )
