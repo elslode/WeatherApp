@@ -10,7 +10,6 @@ import com.elslode.weather.data.sharedPref.PrefHelper
 import com.elslode.weather.data.sharedPref.PrefKeys
 import com.elslode.weather.presentation.Screens
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.produce
 import mumayank.com.airlocationlibrary.AirLocation
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
