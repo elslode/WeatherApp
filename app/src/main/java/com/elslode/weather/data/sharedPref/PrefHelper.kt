@@ -40,7 +40,12 @@ class PrefHelper (context: Context) {
             .apply()
     }
 
-    fun exists(key: String): Boolean {
+    fun existsFloat(key: String): Boolean {
+        val floatValue = sharedPref.getFloat(key, 0f)
+        return floatValue > 0f
+    }
+
+    fun existsInt(key: String): Boolean {
         val intValue = sharedPref.getInt(key, 0)
         return intValue > 0
     }

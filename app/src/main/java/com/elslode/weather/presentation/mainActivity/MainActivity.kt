@@ -9,6 +9,7 @@ import com.elslode.weather.WeatherApp
 import com.elslode.weather.data.sharedPref.PrefHelper
 import com.elslode.weather.data.sharedPref.PrefKeys
 import com.elslode.weather.presentation.Screens
+import kotlinx.coroutines.*
 import mumayank.com.airlocationlibrary.AirLocation
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -25,9 +26,11 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var router: Router
+
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
     private val navigator: Navigator
+
     @Inject
     lateinit var prefHelper: PrefHelper
 
@@ -48,11 +51,6 @@ class MainActivity : AppCompatActivity() {
         true
     )
 
-    override fun onStart() {
-        super.onStart()
-        airLocation.start()
-    }
-
     init {
         navigator = SupportAppNavigator(this, R.id.main_container)
     }
@@ -61,9 +59,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         component.inject(this)
-        router.newRootScreen(Screens.MainFragment())
 
-        if (!prefHelper.exists(PrefKeys.TEMPERATURE)) {
+        CoroutineScope(Dispatchers.IO).launch {
+            airLocation.start()
+            delay(2000)
+            withContext(Dispatchers.Main) {
+                router.newRootScreen(Screens.MainFragment())
+            }
+        }
+
+        if (!prefHelper.existsInt(PrefKeys.TEMPERATURE)) {
             prefHelper.put(PrefKeys.TEMPERATURE, R.id.radioButtonC)
         }
     }

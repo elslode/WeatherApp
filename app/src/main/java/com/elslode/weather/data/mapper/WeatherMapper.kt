@@ -72,8 +72,6 @@ class WeatherMapper @Inject constructor() {
             },
             windspeedKmph = hourlyDto.windspeedKmph,
             windspeedMiles = hourlyDto.windspeedMiles,
-            feelsLikeC = hourlyDto.feelsLikeC,
-            feelsLikeF = hourlyDto.feelsLikeF,
             weather_ru = hourlyDto.weather_ru?.map {
                 mapWeatherDescDtoToWeatherEntity(it)
             },
