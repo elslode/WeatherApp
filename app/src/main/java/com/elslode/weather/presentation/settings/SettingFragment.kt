@@ -1,7 +1,8 @@
 package com.elslode.weather.presentation.settings
 
 import android.content.Context
-import android.content.res.Resources
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,16 +20,11 @@ import com.elslode.weather.WeatherApp
 import com.elslode.weather.data.sharedPref.PrefHelper
 import com.elslode.weather.data.sharedPref.PrefKeys
 import com.elslode.weather.databinding.FragmentSettingBinding
-import com.elslode.weather.presentation.Screens
 import com.elslode.weather.presentation.ViewModelFactory
 import com.elslode.weather.presentation.mainActivity.MainActivity
 import com.elslode.weather.presentation.mainFragment.MainViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
@@ -84,6 +80,9 @@ class SettingFragment : Fragment() {
                 hideKeyboard()
                 exit()
             }
+            openWebSite.setOnClickListener {
+                openWebsite()
+            }
         }
 
         lifecycleScope.launchWhenCreated {
@@ -114,6 +113,17 @@ class SettingFragment : Fragment() {
             binding.rgTemperature.checkedRadioButtonId
         )
         router.exit()
+    }
+
+    private fun openWebsite(){
+        val address: Uri = Uri.parse("https://yandex.ru/pogoda/saint-petersburg?lat=59.833432&lon=30.349402")
+        val openLinkIntent = Intent(Intent.ACTION_VIEW, address)
+
+        if (openLinkIntent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(openLinkIntent)
+        } else {
+            Snackbar.make(requireView(), "Sorry, link is null", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
