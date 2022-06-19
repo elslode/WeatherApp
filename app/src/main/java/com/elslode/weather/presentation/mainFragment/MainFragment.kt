@@ -1,6 +1,7 @@
 package com.elslode.weather.presentation.mainFragment
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
@@ -9,19 +10,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.elslode.weather.R
 import com.elslode.weather.WeatherApp
-import com.elslode.weather.data.sharedPref.PrefHelper
+import com.elslode.weather.data.sharedPref.HelperPreferences.exist
+import com.elslode.weather.data.sharedPref.HelperPreferences.getTemperature
+import com.elslode.weather.data.sharedPref.HelperPreferences.getValue
+import com.elslode.weather.data.sharedPref.HelperPreferences.put
 import com.elslode.weather.data.sharedPref.PrefKeys
+import com.elslode.weather.data.sharedPref.PrefKeys.CITY_KEY
 import com.elslode.weather.databinding.FragmentMainBinding
 import com.elslode.weather.presentation.Screens
 import com.elslode.weather.presentation.ViewModelFactory
 import com.elslode.weather.presentation.mainActivity.MainActivity
-import com.elslode.weather.presentation.detailFragment.adapterHourlyRv.HourlyAdapter
 import com.elslode.weather.presentation.mainFragment.adapterRv.WeatherAdapter
 import com.elslode.weather.utils.State
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.flow.collectLatest
 import ru.terrakok.cicerone.Router
-import java.io.IOException
 import javax.inject.Inject
 
 class MainFragment : Fragment() {
@@ -34,15 +37,14 @@ class MainFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var _mainViewModel: MainViewModel
 
-    @Inject
-    lateinit var prefHelper: PrefHelper
-
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
     }
 
     @Inject
     lateinit var router: Router
+    @Inject
+    lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,14 +53,14 @@ class MainFragment : Fragment() {
     }
 
     private val adapter by lazy {
-        WeatherAdapter(activity?.applicationContext as Application, prefHelper)
+        WeatherAdapter(activity?.applicationContext as Application, preferences)
     }
 
     private val latLon by lazy {
         String.format(
             "%sf,%f",
-            prefHelper.getFloat(PrefKeys.LATITUDE),
-            prefHelper.getFloat(PrefKeys.LONGITUDE)
+            preferences.getValue(PrefKeys.LATITUDE) as Float,
+            preferences.getValue(PrefKeys.LONGITUDE) as Float
         )
     }
 
@@ -77,8 +79,8 @@ class MainFragment : Fragment() {
         (activity as MainActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         lifecycleScope.launchWhenResumed {
-            if (prefHelper.existsString(PrefKeys.CITY_KEY)) {
-                _mainViewModel.getWeather(prefHelper.getString(PrefKeys.CITY_KEY))
+            if (preferences.exist<String>(CITY_KEY)) {
+                _mainViewModel.getWeather(preferences.getValue(CITY_KEY) as String)
             } else {
                 _mainViewModel.getWeather(latLon)
             }
@@ -89,7 +91,7 @@ class MainFragment : Fragment() {
                 navigateTo(
                     Screens.DetailFragment(
                         dataTime = weather.date.toString(),
-                        q = prefHelper.getString(PrefKeys.CITY_KEY) ?: latLon,
+                        q = preferences.getValue(CITY_KEY),
                         position = position
                     )
                 )
@@ -118,17 +120,19 @@ class MainFragment : Fragment() {
                             Picasso.get().load(this?.weatherIconUrl?.last()?.value)
                                 .into(binding.ivStateWeatherToday)
                             binding.tvWeatherTempToday.text =
-                                when (prefHelper.getTemperature()) {
-                                    PrefKeys.c -> this?.FeelsLikeC?.plus(prefHelper.getTemperature())
-                                    PrefKeys.f -> this?.FeelsLikeF?.plus(prefHelper.getTemperature())
+                                when (preferences.getTemperature()) {
+                                    PrefKeys.c -> this?.FeelsLikeC?.plus(preferences.getTemperature())
+                                    PrefKeys.f -> this?.FeelsLikeF?.plus(preferences.getTemperature())
                                     else -> ""
                                 }
                         }
                         (requireActivity() as MainActivity).supportActionBar?.title =
                             it.data?.data?.request?.last()?.query
+                        preferences.put(CITY_KEY, it.data?.data?.request?.last()?.query)
                     }
                     State.EMPTY -> {
                         binding.apply {
+                            progressBar.visibility = View.GONE
                             rvWeatherWeek.isVisible = false
                             binding.tvWeatherTempToday.isVisible = false
                             binding.tvWeatherStateToday.isVisible = false

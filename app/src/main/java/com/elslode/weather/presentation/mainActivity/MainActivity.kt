@@ -1,13 +1,16 @@
 package com.elslode.weather.presentation.mainActivity
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.location.Location
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.elslode.weather.R
 import com.elslode.weather.WeatherApp
-import com.elslode.weather.data.sharedPref.PrefHelper
+import com.elslode.weather.data.sharedPref.HelperPreferences.exist
+import com.elslode.weather.data.sharedPref.HelperPreferences.put
 import com.elslode.weather.data.sharedPref.PrefKeys
+import com.elslode.weather.data.sharedPref.PrefKeys.TEMPERATURE
 import com.elslode.weather.presentation.Screens
 import kotlinx.coroutines.*
 import mumayank.com.airlocationlibrary.AirLocation
@@ -32,23 +35,22 @@ class MainActivity : AppCompatActivity() {
     private val navigator: Navigator
 
     @Inject
-    lateinit var prefHelper: PrefHelper
+    lateinit var preferences: SharedPreferences
 
     private val airLocation = AirLocation(
         this, object : AirLocation.Callback {
             override fun onSuccess(locations: ArrayList<Location>) {
                 locations.map {
-                    prefHelper.put(PrefKeys.LATITUDE, it.latitude.toFloat())
-                    prefHelper.put(PrefKeys.LONGITUDE, it.longitude.toFloat())
+                    preferences.put(PrefKeys.LATITUDE, it.latitude.toFloat())
+                    preferences.put(PrefKeys.LONGITUDE, it.longitude.toFloat())
                 }
             }
 
             override fun onFailure(locationFailedEnum: AirLocation.LocationFailedEnum) {
-                prefHelper.put(PrefKeys.LATITUDE, PrefKeys.LATITUDE_FLOAT)
-                prefHelper.put(PrefKeys.LONGITUDE, PrefKeys.LONGITUDE_FLOAT)
+                preferences.put(PrefKeys.LATITUDE, PrefKeys.LATITUDE_FLOAT)
+                preferences.put(PrefKeys.LONGITUDE, PrefKeys.LONGITUDE_FLOAT)
             }
-        },
-        true
+        }, true
     )
 
     init {
@@ -68,8 +70,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (!prefHelper.existsInt(PrefKeys.TEMPERATURE)) {
-            prefHelper.put(PrefKeys.TEMPERATURE, R.id.radioButtonC)
+        if (!preferences.exist<Int>(TEMPERATURE)) {
+            preferences.put(TEMPERATURE, R.id.radioButtonC)
         }
     }
 

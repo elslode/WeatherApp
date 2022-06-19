@@ -2,8 +2,8 @@ package com.elslode.weather.di
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import com.elslode.weather.data.network.ApiWeather
-import com.elslode.weather.data.sharedPref.PrefHelper
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -16,14 +16,17 @@ interface DataModule {
 
     companion object {
 
+        private const val PREFS_NAME = "weatherApp_preferences"
+
         @Provides
         fun provideContext(application: Application): Context {
             return application.applicationContext
         }
 
+        @Singleton
         @Provides
-        fun providePrefHelper(application: Application): PrefHelper {
-            return PrefHelper(application.baseContext)
+        fun provideSharedPreferences(application: Application): SharedPreferences {
+            return application.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         }
 
         @Provides
