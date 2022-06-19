@@ -2,9 +2,9 @@ package com.elslode.weather.presentation.settings
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -17,7 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.elslode.weather.R
 import com.elslode.weather.WeatherApp
-import com.elslode.weather.data.sharedPref.PrefHelper
+import com.elslode.weather.data.sharedPref.HelperPreferences.getValue
+import com.elslode.weather.data.sharedPref.HelperPreferences.put
 import com.elslode.weather.data.sharedPref.PrefKeys
 import com.elslode.weather.databinding.FragmentSettingBinding
 import com.elslode.weather.presentation.ViewModelFactory
@@ -40,7 +41,7 @@ class SettingFragment : Fragment() {
     private lateinit var _settingVM: MainViewModel
 
     @Inject
-    lateinit var prefHelper: PrefHelper
+    lateinit var preferences: SharedPreferences
 
     @Inject
     lateinit var router: Router
@@ -71,7 +72,7 @@ class SettingFragment : Fragment() {
         (requireActivity() as MainActivity).supportActionBar?.title = requireActivity().getString(R.string.settings_title)
 
         binding.apply {
-            rgTemperature.check(prefHelper.getInt(PrefKeys.TEMPERATURE))
+            rgTemperature.check(preferences.getValue(PrefKeys.TEMPERATURE))
             queryEditText.doAfterTextChanged {
                 it?.trim()
             }
@@ -108,7 +109,7 @@ class SettingFragment : Fragment() {
     }
 
     private fun exit() {
-        prefHelper.put(
+        preferences.put(
             PrefKeys.TEMPERATURE,
             binding.rgTemperature.checkedRadioButtonId
         )

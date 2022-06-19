@@ -1,6 +1,7 @@
 package com.elslode.weather.presentation.detailFragment
 
 import android.app.Application
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -12,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.elslode.weather.R
 import com.elslode.weather.WeatherApp
-import com.elslode.weather.data.sharedPref.PrefHelper
+import com.elslode.weather.data.sharedPref.HelperPreferences.getTemperature
 import com.elslode.weather.data.sharedPref.PrefKeys
 import com.elslode.weather.databinding.FragmentDetailBinding
 import com.elslode.weather.presentation.ViewModelFactory
@@ -44,11 +45,11 @@ class DetailFragment : Fragment() {
     @Inject
     lateinit var router: Router
     @Inject
-    lateinit var prefHelper: PrefHelper
+    lateinit var preferences: SharedPreferences
     @Inject
     lateinit var application: Application
     private val adapterHourly by lazy {
-        HourlyAdapter(application = application, prefHelper)
+        HourlyAdapter(application = application, preferences)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,7 +100,7 @@ class DetailFragment : Fragment() {
                             tvVisibility.text = application.getString(R.string.visibility_km)
                                 .format(currentCondition?.visibility)
 
-                            tvTempOfDetailsMain.text = when (prefHelper.getTemperature()) {
+                            tvTempOfDetailsMain.text = when (preferences.getTemperature()) {
                                 PrefKeys.c ->
                                     application.getString(R.string.temp_c)
                                         .format(weather?.get(position)?.avgtempC)
