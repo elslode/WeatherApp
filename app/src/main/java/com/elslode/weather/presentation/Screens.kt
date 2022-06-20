@@ -1,7 +1,6 @@
 package com.elslode.weather.presentation
 
 import androidx.fragment.app.Fragment
-import com.elslode.weather.presentation.detailFragment.DetailFragment
 import com.elslode.weather.presentation.settings.SettingFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 

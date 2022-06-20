@@ -29,7 +29,6 @@ import kotlinx.coroutines.flow.collectLatest
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-
 class SettingFragment : Fragment() {
 
     private var _binding: FragmentSettingBinding? = null
@@ -38,7 +37,7 @@ class SettingFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var _settingVM: MainViewModel
+    private lateinit var _mainVM: MainViewModel
 
     @Inject
     lateinit var preferences: SharedPreferences
@@ -63,7 +62,7 @@ class SettingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
-        _settingVM = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
+        _mainVM = ViewModelProvider(this, viewModelFactory)[MainViewModel::class.java]
         return binding.root
     }
 
@@ -77,7 +76,7 @@ class SettingFragment : Fragment() {
                 it?.trim()
             }
             searchButton.setOnClickListener {
-                _settingVM.searchCity(queryEditText.text?.toString())
+                _mainVM.searchCity(queryEditText.text?.toString())
                 hideKeyboard()
                 exit()
             }
@@ -87,7 +86,7 @@ class SettingFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            _settingVM.searchIsNotFoundSharedFlow.collectLatest {
+            _mainVM.searchIsNotFoundSharedFlow.collectLatest {
                 Snackbar.make(requireView(), "City is empty", Snackbar.LENGTH_SHORT).show()
             }
         }

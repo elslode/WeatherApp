@@ -35,16 +35,16 @@ class MainFragment : Fragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var router: Router
+    @Inject
+    lateinit var preferences: SharedPreferences
+
     private lateinit var _mainViewModel: MainViewModel
 
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
     }
-
-    @Inject
-    lateinit var router: Router
-    @Inject
-    lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
