@@ -7,7 +7,8 @@
 <img src="https://user-images.githubusercontent.com/63147307/174583964-d2ab748f-4508-4c1a-af7e-df2627eaa22d.png" width="200">
 </p>
 
-##: Используемые технологии
+
+## Используемые технологии
 - [Kotlin]
 - [MVVM Architecture]
 - [Clean Architecture]
