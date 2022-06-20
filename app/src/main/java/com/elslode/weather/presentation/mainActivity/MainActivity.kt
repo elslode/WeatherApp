@@ -29,11 +29,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var router: Router
-
     @Inject
     lateinit var navigatorHolder: NavigatorHolder
     private val navigator: Navigator
-
     @Inject
     lateinit var preferences: SharedPreferences
 

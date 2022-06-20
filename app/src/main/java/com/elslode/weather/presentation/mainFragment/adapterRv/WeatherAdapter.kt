@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class WeatherAdapter @Inject constructor(
     val application: Application,
-    val preferences: SharedPreferences
+    private val preferences: SharedPreferences
 ) : ListAdapter<WeatherEntity, WeatherViewHolder>(WeatherDiffCallback) {
 
     var onWeatherItemClickListener: ((WeatherEntity, pos: Int) -> Unit)? = null

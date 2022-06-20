@@ -2,7 +2,6 @@ package com.elslode.weather.presentation.detailFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.elslode.weather.data.repo.RepositoryImpl
 import com.elslode.weather.domain.entityModel.ResponseDataEntity
 import com.elslode.weather.domain.useCase.GetWeatherForDataUseCase
 import com.elslode.weather.utils.State

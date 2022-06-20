@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class HourlyAdapter @Inject constructor(
     val application: Application,
-    val preferences: SharedPreferences
+    private val preferences: SharedPreferences
 ) : ListAdapter<Hourly, HourlyViewHolder>(HourlyDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyViewHolder {

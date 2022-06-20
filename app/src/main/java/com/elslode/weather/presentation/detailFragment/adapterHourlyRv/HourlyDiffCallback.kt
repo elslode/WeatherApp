@@ -2,7 +2,6 @@ package com.elslode.weather.presentation.detailFragment.adapterHourlyRv
 
 import androidx.recyclerview.widget.DiffUtil
 import com.elslode.weather.domain.entityModel.Hourly
-import com.elslode.weather.domain.entityModel.WeatherEntity
 
 object HourlyDiffCallback: DiffUtil.ItemCallback<Hourly>()  {
 
